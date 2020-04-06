@@ -32,7 +32,15 @@ Please follow the instructions carefully and please install Glasscord AFTER inst
 
 ## How do I install it?
 Well, glad you asked!
-
+### Installer script (reccomended)
+1. Install Python 3 for your OS, either using your package manager or by downloading the installer from the Python website
+2. Make sure `python3` is in your path (on Windows, Arch and other OSs `python` may reference `python3`, use `python --version` to check.
+3. Download the installer script [here](https://raw.githubusercontent.com/AryToNeX/Glasscord/master/installer.py), and save it to any location on your computer
+4. Run the installer script either by:
+  * Double-clicking the file in your file manager, or
+  * Running it in the console by typing `python3 installer.py` or `python installer.py` in the directory you downloaded it
+5. If the script succeeded with no errors, restart your Discord client and enjoy Glasscord!
+### Manual method
 - Download this GitHub repository or look in the Releases section for stable releases to download.
   If you downloaded a zip file, extract it to have convenient access to its files.
 - Locate your Discord Desktop Core module folder.
