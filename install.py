@@ -61,12 +61,16 @@ request.urlretrieve("https://raw.githubusercontent.com/AryToNeX/Glasscord/master
 
 # Downloads new css loader plugin
 print("downloading patched css loader from GitHub...")
-rename(ed_dir + "plugins/css_loader.js", ed_dir + "plugins/css_loader.js.old")
+try:
+    rename(ed_dir + "plugins/css_loader.js", ed_dir + "plugins/css_loader.js.old")
+except:
+    print("css loader backup was already made")
 request.urlretrieve("https://raw.githubusercontent.com/AryToNeX/Glasscord/master/css_loader.js", ed_dir + "plugins/css_loader.js")
 
 # Disables default css loader and sets path for new one
 print("changing theme in config to glasscord default...")
 ed_config = json.load(open(ed_dir + "config.json", "r"))
 ed_config["css_loader"]["path"] = "glasscord.css"
+ed_config["css_loader"]["enabled"] = True
 with open(ed_dir + "config.json", "w") as f:
     json.dump(ed_config, f)
