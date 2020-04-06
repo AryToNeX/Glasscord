@@ -61,7 +61,7 @@ request.urlretrieve("https://raw.githubusercontent.com/AryToNeX/Glasscord/master
 
 # Downloads new css loader plugin
 print("downloading patched css loader from GitHub...")
-rename(ed_dir + "plugins/css_loader.js.old", ed_dir + "plugins/css_loader.js")
+rename(ed_dir + "plugins/css_loader.js", ed_dir + "plugins/css_loader.js.old")
 request.urlretrieve("https://raw.githubusercontent.com/AryToNeX/Glasscord/master/css_loader.js", ed_dir + "plugins/css_loader.js")
 
 # Disables default css loader and sets path for new one
