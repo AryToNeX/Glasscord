@@ -65,7 +65,7 @@ rename(ed_dir + "plugins/css_loader.js", ed_dir + "plugins/css_loader.js.old")
 request.urlretrieve("https://raw.githubusercontent.com/AryToNeX/Glasscord/master/css_loader.js", ed_dir + "plugins/css_loader.js")
 
 # Disables default css loader and sets path for new one
-print("changing theme in to glasscord default...")
+print("changing theme in config to glasscord default...")
 ed_config = json.load(open(ed_dir + "config.json", "r"))
 ed_config["css_loader"]["path"] = "glasscord.css"
 with open(ed_dir + "config.json", "w") as f:
