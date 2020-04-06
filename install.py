@@ -44,7 +44,7 @@ except FileNotFoundError:
 print("downloading glasscord.js from GitHub...")
 request.urlretrieve("https://raw.githubusercontent.com/AryToNeX/Glasscord/master/glasscord.js", core_dir + "glasscord.js")
 # Downloads ewc.asar for Windows compatibility
-if not needs_ewc:
+if needs_ewc:
     print("downloading ewc.asar for Windows compatibility...")
     request.urlretrieve("https://github.com/AryToNeX/Glasscord/raw/master/ewc.asar", core_dir + "ewc.asar")
 
