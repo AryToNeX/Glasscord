@@ -67,7 +67,6 @@ request.urlretrieve("https://raw.githubusercontent.com/AryToNeX/Glasscord/master
 # Disables default css loader and sets path for new one
 print("changing theme in to glasscord default...")
 ed_config = json.load(open(ed_dir + "config.json", "r"))
-ed_config["css_loader"]["enabled"] = False
-ed_config["glass_css_loader"] = {"path": "glasscord.css"}
+ed_config["css_loader"]["path"] = "glasscord.css"
 with open(ed_dir + "config.json", "w") as f:
     json.dump(ed_config, f)
