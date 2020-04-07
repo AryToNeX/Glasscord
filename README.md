@@ -35,7 +35,7 @@ Well, glad you asked!
   - Double-clicking the file in your file manager, or
   - Running it in the console by typing `python3 installer.py` or `python installer.py` in the directory where you downloaded it.
 - If the script succeeded with no errors, you can restart your Discord client and Glasscord would be running!
-   Please read the paragraph below the 'manual method' one to know more about how to use this tool.
+  Please read the paragraph below the 'manual method' one to know more about how to use this tool.
 
 ### Manual method
 
