@@ -14,6 +14,8 @@ try:
     # Search for discord install within correct subdirectory
     if platform.system() == "Linux":
         core_dir = glob(home_dir + "/.config/discord/*/modules/discord_desktop_core")
+        core_dir.extend(glob(home_dir + "/snap/discord/current/.config/discord/x.x.x/modules/discord_desktop_core"))
+        core_dir.extend(glob(home_dir + "/.var/app/com.discordapp.Discord/config/discord/x.x.x/modules/discord_desktop_core"))
     elif platform.system() == "Darwin":
         core_dir = glob(home_dir + "/Library/Application Support/discord/*/modules/discord_desktop_core")
     elif platform.system() == "Windows":
@@ -58,14 +60,6 @@ if not isfile(ed_dir + "config.json"):
 # Downloads default css to ED directory
 print("downloading glasscord default theme from GitHub...")
 request.urlretrieve("https://raw.githubusercontent.com/AryToNeX/Glasscord/master/glasscord_example_theme.css", ed_dir + "glasscord.css")
-
-# Downloads new css loader plugin
-print("downloading patched css loader from GitHub...")
-try:
-    rename(ed_dir + "plugins/css_loader.js", ed_dir + "plugins/css_loader.js.old")
-except:
-    print("css loader backup was already made")
-request.urlretrieve("https://raw.githubusercontent.com/AryToNeX/Glasscord/master/css_loader.js", ed_dir + "plugins/css_loader.js")
 
 # Disables default css loader and sets path for new one
 print("changing theme in config to glasscord default...")
