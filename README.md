@@ -15,7 +15,7 @@ It is compatible with Windows, Linux and macOS.
 ## How do I install it?
 Well, glad you asked!
 
-1. Glasscord alone won't do anything to your Discord client. You will ***need*** a CSS loader to be able to use Glasscord. Check the [compatibilty](#Compatibility) section for more info on what loader to choose. Install one first before proceeding.
+1. Glasscord alone won't do anything to your Discord client. You will ***need*** a CSS loader to be able to use Glasscord. Check the [compatibility](##-Is-it-compatible-with-_[name-of-random-Discord-plugin-loader-here]_?) section for more info on what loader to choose. Install one first before proceeding.
 
 2. Download this GitHub repository by clicking on the green button that says "Clone or download", then download the ZIP file. Once you downloaded the zip file, extract it to have convenient access to its files.
 
@@ -41,14 +41,14 @@ Well, glad you asked!
     so all you really have to write is `require('./glasscord.js');` at the **absolute beginning** of that file.
 
 6. Replace the css_loader.js file of EnhancedDiscord with the custom css_loader.js provided in the repository/download.
-You will find the css_loader.js file that needs to be replaced in the EnhancedDiscord install directory which will likely be in the same folder you executed the installer from. If you are using a different CSS loader this part will most likely be more difficult. Check the [compatibilty](#Compatibility) section for more info.
+You will find the css_loader.js file that needs to be replaced in the EnhancedDiscord install directory which will likely be in the same folder you executed the installer from. If you are using a different CSS loader this part will most likely be more difficult. Check the [compatibility](##-Is-it-compatible-with-_[name-of-random-Discord-plugin-loader-here]_?) section for more info.
 
-7. **You can now start Discord and Glasscord should be running!** Note you still need to use a theme supporting Glasscord in order to see visual changes. Check [How do I use it?](##-How-do-I-use-it?) or the section for [theme creators](##-For-theme-creators-/-How-to-implement-Glasscord-in-themes) if you don't fear CSS.
+7. **You can now start Discord and Glasscord should be running!** Note you still need to use a theme supporting Glasscord in order to see visual changes. Check [How do I USE it?](##-How-do-I-use-it?) or the section for [theme creators](##-Hey-buddy-I-am-a-theme-creator,-how-should-I-support-Glasscord-in-my-own-themes?) if you don't fear CSS.
 
-## Compatibility
+## Is it compatible with _[name of random Discord plugin loader here]_?
 If installed properly, Glasscord won't interfere with any modern plugin loaders or CSS loaders. Glasscord is actively being tested with EnhancedDiscord and is working flawlessly, therefore it is recommended (but not entirely necessary) to use EnhancedDiscord.
 
-## How do I use it?
+## How do I USE it?
 You then have to make or find a compatible theme to get the blur effect. If you are just trying stuff, you can load the `glasscord_example_theme.css` from the github repository on your CSS loader of choice.
 
 We recommend to install our modified CSS Loader for EnhancedDiscord, so please get it first, then override the `css_loader.js` file on ED's plugins directory with the one on this repository!
@@ -67,7 +67,7 @@ It seemed that a few people liked the idea, so I made that into an actual tool f
 
 _TL;DR: Help me I have no purpose in this life anymore_
 
-## For theme creators / How to implement Glasscord in themes
+## Hey buddy I am a theme creator, how should I support Glasscord in my own themes?
 Glasscord will look for some CSS properties defined in the `:root` CSS selector.
 Please take a look at the `glasscord_example_theme.css` file to better understand how they are used.
 
