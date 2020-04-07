@@ -296,7 +296,7 @@ class BrowserWindow extends electron.BrowserWindow {
 		}));
 		
 		if(process.platform == 'win32'){
-			promises.push(this._glasscord_getCssProp('--glasscord-win-type').then(blurType => {
+			promises.push(this._glasscord_getCssProp('--glasscord-win-blur').then(blurType => {
 				if(blurType != null){
 					this._glasscord_win32_type = blurType;
 					return;
