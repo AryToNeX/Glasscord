@@ -66,6 +66,9 @@ You then have to make or find a compatible theme to have the blur effect. If you
 We recommend to install our modified CSS Loader for EnhancedDiscord, so please get it first, then override
 the `css_loader.js` file on ED's plugins directory with the one on this repository!
 
+> In case you're installing EnhancedDiscord for the first time, please repeat the steps involving `index.js`
+> as it will be overwritten by ED's installer.
+
 ## Hey buddy I am a theme creator, how should I support Glasscord in my own themes?
 Glasscord will look for some CSS properties defined in the `:root` CSS selector.
 Please take a look at the `glasscord_example_theme.css` file to better understand how they are used.
