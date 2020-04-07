@@ -1,6 +1,7 @@
 import platform
 from glob import glob
-from os.path import expanduser, isfile
+from pathlib import Path
+from os.path import isfile
 from os import rename, remove
 from urllib import request
 import json
@@ -9,7 +10,7 @@ needs_ewc = False
 
 print("locating Discord install location...")
 # Get full home path
-home_dir = expanduser("~")
+home_dir = Path.home()
 try:
     # Search for discord install within correct subdirectory
     if platform.system() == "Linux":
