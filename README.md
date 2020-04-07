@@ -7,10 +7,54 @@ Providing composition effects to the Discord client.
 
 ![Preview](preview.png)
 
-## What's it?
+## What is it?
 Glasscord is a really simple tool that enables window composition effects (transparency and frosted glass effects) on Discord.
 
 It is compatible with Windows, Linux and macOS.
+
+## How do I install it?
+Well, glad you asked!
+
+1. Glasscord alone won't do anything to your Discord client. You will ***need*** a CSS loader to be able to use Glasscord. Check the [compatibilty](#Compatibility) section for more info on what loader to choose. Install one first before proceeding.
+
+2. Download this GitHub repository by clicking on the green button that says "Clone or download", then download the ZIP file. Once you downloaded the zip file, extract it to have convenient access to its files.
+
+3. Locate your Discord Desktop Core module folder. Replace the x.x.x with the current host of Discord that you are using (as of the time of writing this, the current host is 0.0.306). This might be different in the future, so just navigate to the folder in which x.x.x is located and continue from there.
+    - Linux: `$HOME/.config/discord/x.x.x/modules/discord_desktop_core/`
+    - Windows: `%AppData%\discord\x.x.x\modules\discord_desktop_core\`
+    - macOS: `~/Library/Application Support/discord/x.x.x/modules/discord_desktop_core/`
+4. Put the `glasscord.js` file inside that folder. Additionally, if you are on Windows, put the `ewc.asar` file inside that folder.
+
+5. Edit the `index.js` file which was already in that folder.
+
+    The text inside that file that looks like the following:
+    ```
+    [bunch of random stuff if you have mods installed]
+    module.exports = require('./core.asar');
+    ```
+    needs to bechanged into
+    ```
+    require('./glasscord.js');
+    [bunch of random stuff if you have mods installed]
+    module.exports = require('./core.asar');
+    ```
+    so all you really have to write is `require('./glasscord.js');` at the **absolute beginning** of that file.
+
+6. Replace the css_loader.js file of EnhancedDiscord with the custom css_loader.js provided in the repository/download.
+You will find the css_loader.js file that needs to be replaced in the EnhancedDiscord install directory which will likely be in the same folder you executed the installer from. If you are using a different CSS loader this part will most likely be more difficult. Check the [compatibilty](#Compatibility) section for more info.
+
+7. **You can now start Discord and Glasscord should be running!** Note you still need to use a theme supporting Glasscord in order to see visual changes. Check [How do I use it?](##-How-do-I-use-it?) or the section for [theme creators](##-For-theme-creators-/-How-to-implement-Glasscord-in-themes) if you don't fear CSS.
+
+## Compatibility
+If installed properly, Glasscord won't interfere with any modern plugin loaders or CSS loaders. Glasscord is actively being tested with EnhancedDiscord and is working flawlessly, therefore it is recommended (but not entirely necessary) to use EnhancedDiscord.
+
+## How do I use it?
+You then have to make or find a compatible theme to get the blur effect. If you are just trying stuff, you can load the `glasscord_example_theme.css` from the github repository on your CSS loader of choice.
+
+We recommend to install our modified CSS Loader for EnhancedDiscord, so please get it first, then override the `css_loader.js` file on ED's plugins directory with the one on this repository!
+
+**Note:** Someone reported that BetterDiscord installs are a little bit trickier to get working with Glasscord.
+Please follow the instructions carefully and please install Glasscord AFTER installing BetterDiscord!
 
 ## So, is it a theme?
 Glasscord is NOT a theme. It's a tool that enables themes to request composition effects.
@@ -23,50 +67,7 @@ It seemed that a few people liked the idea, so I made that into an actual tool f
 
 _TL;DR: Help me I have no purpose in this life anymore_
 
-## Is it compatible with _[name of random Discord plugin loader here]_?
-If installed properly, Glasscord won't interfere with any modern plugin loaders.
-In fact, I tested it with EnhancedDiscord and it works flawlessly!
-
-**Note:** Someone reported that BetterDiscord installs are a little bit trickier to get working with Glasscord.
-Please follow the instructions carefully and please install Glasscord AFTER installing BetterDiscord!
-
-## How do I install it?
-Well, glad you asked!
-
-- Download this GitHub repository or look in the Releases section for stable releases to download.
-  If you downloaded a zip file, extract it to have convenient access to its files.
-- Locate your Discord Desktop Core module folder.
-  - On Linux, it is `$HOME/.config/discord/x.x.x/modules/discord_desktop_core/`
-  - On Windows, it is `%AppData%\discord\x.x.x\modules\discord_desktop_core\`
-  - On macOS, it is `~/Library/Application Support/discord/x.x.x/modules/discord_desktop_core/`
-- Put the `glasscord.js` file inside that folder.
-- If you are on Windows, you should also put the `ewc.asar` file inside that folder.
-- Edit the `index.js` file which was already in that folder.
-  
-  The text inside that file
-  ```
-  [bunch of random stuff if you have mods installed]
-  module.exports = require('./core.asar');
-  ```
-  should become
-  ```
-  require('./glasscord.js');
-  [bunch of random stuff if you have mods installed]
-  module.exports = require('./core.asar');
-  ```
-  so you really have to write `require('./glasscord.js');` at the **absolute beginning** of that file.
-- You can now start Discord and Glasscord would be running!
-
-## How do I USE it?
-Glasscord alone won't do anything to your Discord client. You WILL need a CSS loader at least to be able to use Glasscord.
-Plus, you can choose which CSS loader to use; we're not reinventing the wheel here.
-
-You then have to make or find a compatible theme to have the blur effect. If you are just trying stuff, you can load the `glasscord_example_theme.css` on your CSS loader of choice.
-
-We recommend to install our modified CSS Loader for EnhancedDiscord, so please get it first, then override
-the `css_loader.js` file on ED's plugins directory with the one on this repository!
-
-## Hey buddy I am a theme creator, how should I support Glasscord in my own themes?
+## For theme creators / How to implement Glasscord in themes
 Glasscord will look for some CSS properties defined in the `:root` CSS selector.
 Please take a look at the `glasscord_example_theme.css` file to better understand how they are used.
 
