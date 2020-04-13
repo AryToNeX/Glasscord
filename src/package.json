@@ -4,6 +4,9 @@
     "version": "0.0.6",
     "description": "Glasscord",
     "main": "index.js",
+    "scripts": {
+        "package":"asar pack . glasscord.asar"
+    },
     "private": true,
     "dependencies": {}
 }
