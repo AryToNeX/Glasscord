@@ -8,5 +8,7 @@
         "package":"asar pack . glasscord.asar"
     },
     "private": true,
-    "dependencies": {}
+    "dependencies": {
+        "electron": "^8.2.2"
+    }
 }
