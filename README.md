@@ -42,7 +42,7 @@ Well, glad you asked!
     - If you installed Discord via .tar.gz or via .deb, it is `$HOME/.config/discord/x.x.x/modules/discord_desktop_core/`
     - If you installed it via Snap package, it is `$HOME/snap/discord/current/.config/discord/x.x.x/modules/discord_desktop_core/`
     - If you installed it via Flatpak, it is `$HOME/.var/app/com.discordapp.Discord/config/discord/x.x.x/modules/discord_desktop_core/`
-  
+    #NOTE:  X.X.X in the file path means the current version number. 
     Everything said here assumes that you're using the stable release.
     If you are using Public Test Beta (`discordptb`) or Canary (`discordcanary`), please look for the according configuration path.
     Also, please note that if you installed Discord via Snap/Flatpak, the blur behind effect will most likely fail to load
