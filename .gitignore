@@ -2,3 +2,4 @@ ewc/*
 ewc64/* 
 latest.json
 glasscord.asar
+src/node_modules
