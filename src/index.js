@@ -53,7 +53,6 @@ if (electron.deprecate && electron.deprecate.promisify) {
 }
 
 function onReady(){
-	console.log("onReady reached");
 	if(!electron.app.commandLine.hasSwitch('enable-transparent-visuals'))
 		electron.app.commandLine.appendSwitch('enable-transparent-visuals'); // ALWAYS enable transparent visuals
 
@@ -61,16 +60,13 @@ function onReady(){
 	const electronPath = require.resolve("electron");
 	const newElectron = Object.assign({}, electron, {BrowserWindow}); // Create new electron object
 
-	do{
-		try{
-			require.cache[electronPath].exports = newElectron; // Try to assign the exports as the new electron
-			if (require.cache[electronPath].exports === newElectron) break; // If it worked, break the loop
-			else throw 'Zack is not cool';
-		}catch(e){
-			delete require.cache[electronPath].exports; // If it didn't work, try to delete existing
-		}
-	}while(true);
-	console.log("onReady finished");
+	while(true) try{
+		require.cache[electronPath].exports = newElectron; // Try to assign the exports as the new electron
+		if (require.cache[electronPath].exports === newElectron) break; // If it worked, break the loop
+		else throw 'Zack is not cool';
+	}catch(e){
+		delete require.cache[electronPath].exports; // If it didn't work, try to delete existing
+	}
 };
 
 function overrideEmit(){ // from Zack, blame Electron
@@ -86,7 +82,6 @@ function overrideEmit(){ // from Zack, blame Electron
 }
 
 function injectFromResources(){
-	console.log("Injecting");
 	if(process.platform == 'linux') onReady();
 	overrideEmit();
 	// Use the app's original info to run it
@@ -103,12 +98,11 @@ function injectFromResources(){
 		basePath = path.dirname(_pkgDir);
 		break;
 	}
-	if(!pkgDir) throw new Exception("There's no package.json to load!");
+	if(!pkgDir) throw "There's no package.json to load!";
 	const pkg = require(pkgDir);
 	//electron.app.setPath('userData', path.join(electron.app.getPath('appData'), pkg.name));
 	electron.app.setAppPath(basePath);
 	electron.app.name = pkg.name;
-	console.log("Starting main");
 	Module._load(path.join(basePath, pkg.main), null, true);
 }
 
