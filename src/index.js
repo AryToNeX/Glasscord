@@ -19,6 +19,8 @@ const Main = require('./main.js');
 const Utils = require('./utils.js');
 const electron = require('electron');
 const path = require('path');
+const fs = require('fs');
+const Module = require('module');
 
 // Require our version checker
 require('./version_check.js')();
@@ -44,25 +46,13 @@ class BrowserWindow extends electron.BrowserWindow {
 	}
 }
 
-// from Zack
-const originalEmit = electron.app.emit;
-electron.app.emit = function(event, ...args) {
-	if (event !== "ready") return Reflect.apply(originalEmit, this, arguments);
-	setTimeout(() => {
-		electron.app.emit = originalEmit;
-		electron.app.emit("ready", ...args);
-	}, 500);
-};
-
-// from Zack's BBD
 Object.assign(BrowserWindow, electron.BrowserWindow); // Retains the original functions
-
 if (electron.deprecate && electron.deprecate.promisify) {
     const originalDeprecate = electron.deprecate.promisify; // Grab original deprecate promisify
     electron.deprecate.promisify = (originalFunction) => originalFunction ? originalDeprecate(originalFunction) : () => void 0; // Override with falsey check
 }
 
-const onReady = () => {
+function onReady(){
 	if(!electron.app.commandLine.hasSwitch('enable-transparent-visuals'))
 		electron.app.commandLine.appendSwitch('enable-transparent-visuals'); // ALWAYS enable transparent visuals
 
@@ -81,15 +71,43 @@ const onReady = () => {
 	}while(true);
 };
 
-// Do the electron assignment
-if (process.platform == "win32" || process.platform == "darwin") electron.app.once("ready", onReady);
-else onReady();
+function overrideEmit(){ // from Zack, blame Electron
+	const originalEmit = electron.app.emit;
+	electron.app.emit = function(event, ...args) {
+		if (event !== "ready") return Reflect.apply(originalEmit, this, arguments);
+		setTimeout(() => {
+			electron.app.emit = originalEmit;
+			electron.app.emit("ready", ...args);
+		}, 600);
+	};
+}
 
-// Use the app's original info to run it
-let basePath = path.join(__dirname, "..", "..", "app.original"); // assume we moved the app path
-if(!require('fs').existsSync(basePath)) // if that path doesn't exist
-	basePath = path.join(__dirname, "..", "..", "app.asar"); // move our target to app.asar
-const pkg = require(path.join(basePath, "package.json"));
-electron.app.setAppPath(basePath);
-electron.app.setName(pkg.name);
-require('module')._load(path.join(basePath, pkg.main), null, true);
+function injectFromResources(){
+	overrideEmit();
+	electron.app.once("ready", onReady);
+	// Use the app's original info to run it
+	const probablePkgs = [
+		path.join(__dirname, "..", "..", "package.original.json"),
+		path.join(__dirname, "..", "..", "..", "app.original", "package.json"),
+		path.join(__dirname, "..", "..", "..", "app.asar", "package.json")
+	];
+	let pkgDir;
+	let basePath;
+	for(let _pkgDir of probablePkgs){
+		if(!fs.existsSync(_pkgDir)) continue;
+		pkgDir = _pkgDir;
+		basePath = path.dirname(_pkgDir);
+		break;
+	}
+	if(!pkgDir) throw new Exception("There's no package.json to load!");
+	const pkg = require(pkgDir);
+	//electron.app.setPath('userData', path.join(electron.app.getPath('appData'), pkg.name));
+	electron.app.setAppPath(basePath);
+	electron.app.name = pkg.name;
+	Module._load(path.join(basePath, pkg.main), null, true);
+}
+
+if(electron.app.name == 'discord')// we can assume it's the old fashioned method
+	onReady();
+else
+	injectFromResources();
