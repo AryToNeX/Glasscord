@@ -44,13 +44,52 @@ class BrowserWindow extends electron.BrowserWindow {
 	}
 }
 
-// from EnhancedDiscord -- thanks folks!
-const electron_path = require.resolve('electron');
-Object.assign(BrowserWindow, electron.BrowserWindow); // Assigns the new chrome-specific ones
+// from Zack
+const originalEmit = electron.app.emit;
+electron.app.emit = function(event, ...args) {
+	if (event !== "ready") return Reflect.apply(originalEmit, this, arguments);
+	setTimeout(() => {
+		electron.app.emit = originalEmit;
+		electron.app.emit("ready", ...args);
+	}, 500);
+};
+
+// from Zack's BBD
+Object.assign(BrowserWindow, electron.BrowserWindow); // Retains the original functions
+
 if (electron.deprecate && electron.deprecate.promisify) {
-	const originalDeprecate = electron.deprecate.promisify; // Grab original deprecate promisify
-	electron.deprecate.promisify = (originalFunction) => originalFunction ? originalDeprecate(originalFunction) : () => void 0; // Override with falsey check
+    const originalDeprecate = electron.deprecate.promisify; // Grab original deprecate promisify
+    electron.deprecate.promisify = (originalFunction) => originalFunction ? originalDeprecate(originalFunction) : () => void 0; // Override with falsey check
 }
-const newElectron = Object.assign({}, electron, {BrowserWindow});
-delete require.cache[electron_path].exports;
-require.cache[electron_path].exports = newElectron;
+
+const onReady = () => {
+	if(!electron.app.commandLine.hasSwitch('enable-transparent-visuals'))
+		electron.app.commandLine.appendSwitch('enable-transparent-visuals'); // ALWAYS enable transparent visuals
+
+	Object.assign(BrowserWindow, electron.BrowserWindow); // Assigns the new chrome-specific functions
+	const electronPath = require.resolve("electron");
+	const newElectron = Object.assign({}, electron, {BrowserWindow}); // Create new electron object
+
+	do{
+		try{
+			require.cache[electronPath].exports = newElectron; // Try to assign the exports as the new electron
+			if (require.cache[electronPath].exports === newElectron) break; // If it worked, break the loop
+			else throw 'Zack is not cool';
+		}catch(e){
+			delete require.cache[electronPath].exports; // If it didn't work, try to delete existing
+		}
+	}while(true);
+};
+
+// Do the electron assignment
+if (process.platform == "win32" || process.platform == "darwin") electron.app.once("ready", onReady);
+else onReady();
+
+// Use the app's original info to run it
+let basePath = path.join(__dirname, "..", "..", "app.original"); // assume we moved the app path
+if(!require('fs').existsSync(basePath)) // if that path doesn't exist
+	basePath = path.join(__dirname, "..", "..", "app.asar"); // move our target to app.asar
+const pkg = require(path.join(basePath, "package.json"));
+electron.app.setAppPath(basePath);
+electron.app.setName(pkg.name);
+require('module')._load(path.join(basePath, pkg.main), null, true);
