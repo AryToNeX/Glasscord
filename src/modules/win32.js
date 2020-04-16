@@ -71,7 +71,7 @@ module.exports = class Win32 extends Module{
 		const ewc = require("../../lib/ewc");
 		switch(type){
 			case 'acrylic':
-				ewc.setAcrylic(this.main.win, 0x01000000);
+				ewc.setAcrylic(this.main.win, 0x00000001);
 				break;
 			case 'blurbehind':
 				ewc.setBlurBehind(this.main.win, 0x00000000);
