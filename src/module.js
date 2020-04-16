@@ -32,7 +32,7 @@ module.exports = class Module{
 	constructor(main){
 		this.main = main;
 		this.config = Utils.getConfigForModule(this.constructor.name);
-		this.main._log("Module " + this.constructor.name + " loaded!", 'log');
+		this.log("Module loaded!");
 	}
 	
 	update(cssProp, value){}
@@ -41,5 +41,17 @@ module.exports = class Module{
 	saveConfig(){
 		Utils.setConfigForModule(this.constructor.name, this.config);
 		Utils.saveConfig();
+	}
+
+	log(message, level = 'log') {
+		this.main._log(`[${this.constructor.name}] ${message}`, level);
+	}
+
+	executeJavaScript(value) {
+		return this.main.win.webContents.executeJavaScript(value);
+	}
+
+	executeMethod(method, ...params) {
+		return this.executeJavaScript(`(${method.toString().replace(method.name, "function")})(...${JSON.stringify(params)});`);
 	}
 }
