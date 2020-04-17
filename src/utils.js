@@ -48,6 +48,7 @@ class Utils{
 
 	static getConfigForModule(name){
 		try{
+			if (this.config.modules[name] && !this.config.modules[name].config) return this.config.modules[name].config = {};
 			return this.config.modules[name].config;
 		}catch(e){
 			return {};
