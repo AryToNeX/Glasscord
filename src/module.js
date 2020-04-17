@@ -37,7 +37,6 @@ module.exports = class Module{
 	
 	update(cssProp, value){}
 	
-	
 	saveConfig(){
 		Utils.setConfigForModule(this.constructor.name, this.config);
 		Utils.saveConfig();
@@ -45,13 +44,5 @@ module.exports = class Module{
 
 	log(message, level = 'log') {
 		this.main._log(`[${this.constructor.name}] ${message}`, level);
-	}
-
-	executeJavaScript(value) {
-		return this.main.win.webContents.executeJavaScript(value);
-	}
-
-	executeMethod(method, ...params) {
-		return this.executeJavaScript(`(${method.toString().replace(method.name, "function")})(...${JSON.stringify(params)});`);
 	}
 }

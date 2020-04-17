@@ -16,6 +16,8 @@
 'use strict';
 
 const Module = require('../module.js');
+const util = require('util');
+const execFile = util.promisify(require('child_process').execFile);
 
 module.exports = class Linux extends Module{
 	static isCore = true;
@@ -23,36 +25,43 @@ module.exports = class Linux extends Module{
 	cssProps = ["--glasscord-linux-blur"];
 	
 	update(cssProp, value){
-		if(value && process.env.XDG_SESSION_TYPE != 'x11'){
-			this.main._log("You are not on an X11 session, therefore Glasscord can\'t request the frosted glass effect!", 'log');
-			return;
-		}
-		
-		if(process.env.XDG_SESSION_TYPE == 'x11'){
-			let execFile = require('child_process').execFile;
-			let xprop;
-			execFile('which', ['xprop'], (error,stdout,stderr) => {
-				if(error){
-					this.main._log("Your system is missing the xprop tool (perhaps we're in a Snap/Flatpak container?). Please make it available to Discord to be able to request the frosted glass effect!", 'log');
-					return;
+		if(value){
+			this._getXWindowManager().then(res => {
+				switch(res){
+					case 'KWin':
+						this._kwin_requestBlur(value);
+						break;
+					default:
+						if(value)
+							this.log("You are not running a supported window manager. Blur won't be available via Glasscord.");
+						break;
 				}
-				xprop = stdout.trim();
+			});
+		}
+	}
+	
+	/**
+	 * This method returns us the current X window manager used
+	 */
+	_getXWindowManager(){
+		if(process.env.XDG_SESSION_TYPE == 'x11'){
+			let xprop;
+			return execFile('which', ['xprop']).then(res => {
+				if(res.error){
+					this.log("Your system is missing the xprop tool (perhaps we're in a Snap/Flatpak container?). Please make it available to Discord!");
+					return null;
+				}
+				xprop = res.stdout.trim();
 				
 				const shCommand = `${xprop} -id $(xprop -root -notype | awk '$1=="_NET_SUPPORTING_WM_CHECK:"\{print $5\}') -notype -f _NET_WM_NAME 8t | grep "_NET_WM_NAME = " | cut --delimiter=' ' --fields=3 | cut --delimiter='"' --fields=2`;
-				execFile('sh', ['-c',shCommand], (error,stdout,stderr) => {
-					if(error) return;
-					switch(stdout.trim()){
-						case 'KWin':
-							this._kwin_requestBlur(value);
-							break;
-						default:
-							if(value)
-								this.main._log("You are not running a supported window manager. Blur won't be available via Glasscord.", 'log');
-							break;
-					}
+				return execFile('sh', ['-c',shCommand]).then(res => {
+					if(res.error) return null;
+					return res.stdout.trim();
 				});
 			});
 		}
+		this.log("It seems you're not in an X.Org session!");
+		return Promise(null);
 	}
 	
 	/**
