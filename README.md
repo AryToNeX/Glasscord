@@ -43,7 +43,7 @@ Well, glad you asked!
   - On Windows, it is `%AppData%\discord\x.x.x\modules\discord_desktop_core\`
   - On macOS, it is `~/Library/Application Support/discord/x.x.x/modules/discord_desktop_core/`
   - On Linux we must make distinction between three main cases:
-    - If you installed Discord via .tar.gz or via .deb, it is `$HOME/.config/discord/x.x.x/modules/discord_desktop_core/`
+    - If you installed Discord via .tar.gz, .deb or the AUR on Arch/Manjaro, it is `$HOME/.config/discord/x.x.x/modules/discord_desktop_core/`
     - If you installed it via Snap package, it is `$HOME/snap/discord/current/.config/discord/x.x.x/modules/discord_desktop_core/`
     - If you installed it via Flatpak, it is `$HOME/.var/app/com.discordapp.Discord/config/discord/x.x.x/modules/discord_desktop_core/`
 
