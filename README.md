@@ -38,6 +38,10 @@ Well, glad you asked!
   Keep in mind that Glasscord may work with other CSS loaders and client mods too.
   
   After you installed the CSS loader properly, you can continue following this guide.
+- If you are using Arch linux or manjaro you can install Glasscord from the AUR instead of following this guide.
+	- [glasscord](https://aur.archlinux.org/packages/glasscord/)
+	- [glasscord-git](https://aur.archlinux.org/packages/glasscord-git/)
+	- [glasscord-bin](https://aur.archlinux.org/packages/glasscord-bin/)
 - Look in the Releases section for the latest released version of Glasscord. Download the `glasscord.asar` file from there.
 - Locate your Discord Desktop Core module folder. In the respective file paths, `x.x.x` corresponds to the version number.
   - On Windows, it is `%AppData%\discord\x.x.x\modules\discord_desktop_core\`
