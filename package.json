@@ -1,7 +1,7 @@
 {
   "name": "glasscord",
   "author": "Naomi Calabretta <me@arytonex.pw> (http://arytonex.pw)",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Injecting composition effects into Electron applications",
   "main": "src/index.js",
   "scripts": {
@@ -21,7 +21,9 @@
     "url": "https://github.com/AryToNeX/Glasscord/issues"
   },
   "homepage": "https://github.com/AryToNeX/Glasscord#readme",
-  "dependencies": {},
+  "dependencies": {
+    "glasstron": "github:AryToNeX/Glasstron"
+  },
   "devDependencies": {
     "asar": "^3.0.3",
     "glob": "^7.1.6"

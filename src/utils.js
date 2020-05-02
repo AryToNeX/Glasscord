@@ -13,22 +13,29 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-'use strict';
+"use strict";
 
-const path = require('path');
-const fs = require('fs');
-const electron = require('electron');
+const path = require("path");
+const fs = require("fs");
+const electron = require("electron");
 
+<<<<<<< HEAD
 const savepath = path.join(electron.app.getPath('appData'), 'glasscord');
 const sysconfigpath = path.join('/etc/', 'glasscord');
 const globalconfigpath = path.join(savepath, 'GlobalConfiguration.json');
 const globalconfigsyspath = path.join(sysconfigpath, 'GlobalConfiguration.json');
 const configpath = path.join(savepath, 'config_' + electron.app.name + '.json');
 const configsyspath = path.join(sysconfigpath, 'config_' + electron.app.name + '.json');
+=======
+const savepath = path.join(electron.app.getPath("appData"), "glasscord");
+const globalconfigpath = path.join(savepath, "GlobalConfiguration.json");
+const configpath = path.join(savepath, "config_" + electron.app.name + ".json");
+>>>>>>> c3688cf... 0.2.0: Glasstron-centric changes; read description
 const defaultGlobalConfig = {
 	autoUpdate: true
 };
 const defaultConfig = {
+	disableGlasstronApi: true,
 	windowProps: {},
 	modules: {}
 };
@@ -38,7 +45,7 @@ class Utils{
 	static loadConfig(){
 		if(!this.config){
 			try{
-				this.config = require(configpath);
+				this.config = Object.assign({}, defaultConfig, require(configpath));
 			}catch(e){
 				try {
 					if (process.platform !== "win32") this.config = require(configsyspath);
@@ -54,7 +61,7 @@ class Utils{
 	static loadGlobalConfig(){
 		if(!this.globalConfig){
 			try{
-				this.globalConfig = require(globalconfigpath);
+				this.globalConfig = Object.assign({}, defaultGlobalConfig, require(globalconfigpath));
 			}catch(e){
 				try{
 					if (process.platform !== "win32") this.globalConfig = require(globalconfigsyspath);
@@ -98,12 +105,13 @@ class Utils{
 		this.globalConfig[name] = value;
 	}
 
-	static getConfigForModule(name){
+	static getConfigForModule(name, _defaultConfig = {}){
 		try{
-			if (this.config.modules[name] && !this.config.modules[name].config) return this.config.modules[name].config = {};
-			return this.config.modules[name].config;
+			if(this.config.modules[name] && !this.config.modules[name].config)
+				return this.config.modules[name].config = Object.assign({}, _defaultConfig);
+			return Object.assign({}, _defaultConfig, this.config.modules[name].config);
 		}catch(e){
-			return {};
+			return Object.assign({}, _defaultConfig);
 		}
 	}
 

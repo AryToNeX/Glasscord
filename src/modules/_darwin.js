@@ -13,17 +13,18 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-'use strict';
+"use strict";
 
-const Module = require('../module.js')
+const glasstron = require("../glasstron_wrapper.js");
+const Module = require("../module.js")
 
 module.exports = class Darwin extends Module{
 	static isCore = true;
-	static platform = ['darwin'];
-	cssProps = ['--glasscord-macos-vibrancy'];
+	static platform = ["darwin"];
+	cssProps = ["--glasscord-macos-vibrancy"];
 	
-	update(cssProp, value){
+	update(win, cssProp, value){
 		if(!value || value == "none") value = null;
-		this.main.win.setVibrancy(value);
+		glasstron.update(win, {macos: {vibrancy: value}});
 	}
 }

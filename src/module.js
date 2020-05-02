@@ -13,9 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-'use strict';
+"use strict";
 
-const Utils = require('./utils.js');
+const Utils = require("./utils.js");
+const Main = require("./main.js");
+const WebContents = require("electron").WebContents;
 
 module.exports = class Module{
 	static isCore = false;
@@ -29,20 +31,27 @@ module.exports = class Module{
 	
 	cssProps = [];
 	
-	constructor(main){
-		this.main = main;
-		this.config = Utils.getConfigForModule(this.constructor.name);
-		this.log("Module loaded!");
+	constructor(){
+		this.config = Utils.getConfigForModule(this.constructor.name, this.constructor.defaultConfig);
+		this.logGlobal("Module loaded!");
 	}
 	
-	update(cssProp, value){}
+	windowInit(win){}
+	
+	update(win, cssProp, value){}
 	
 	saveConfig(){
 		Utils.setConfigForModule(this.constructor.name, this.config);
 		Utils.saveConfig();
 	}
 
-	log(message, level = 'log') {
-		this.main._log(`[${this.constructor.name}] ${message}`, level);
+	log(webContents, message, level = "log"){
+		message = `[${this.constructor.name}] ${message}`;
+		return Main._log(webContents, message, level);
+	}
+
+	logGlobal(message, level = "log") {
+		message = `[${this.constructor.name}] ${message}`;
+		return Main._logGlobal(message, level);
 	}
 }

@@ -13,15 +13,15 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-'use strict';
+"use strict";
 
-const path = require('path');
-const https = require('https');
-const fs = require('fs');
-const Utils = require('./utils.js');
-const pak = require('../package.json');
+const path = require("path");
+const https = require("https");
+const fs = require("fs");
+const Utils = require("./utils.js");
+const pak = require("../package.json");
 
-// why bother requiring the 'request' module????
+// why bother requiring the "request" module????
 function httpsGetRecursive(url, options, callback){
 	https.get(url, options, result => {
 		if(result.statusCode == 301 || result.statusCode == 302){
@@ -36,8 +36,8 @@ function httpsGetRecursive(url, options, callback){
 function versionCompare(v1, v2, options) {
     var lexicographical = options && options.lexicographical,
         zeroExtend = options && options.zeroExtend,
-        v1parts = v1.split('.'),
-        v2parts = v2.split('.');
+        v1parts = v1.split("."),
+        v2parts = v2.split(".");
 
     function isValidPart(x) {
         return (lexicographical ? /^\d+[A-Za-z]*$/ : /^\d+$/).test(x);
@@ -83,23 +83,23 @@ function versionCompare(v1, v2, options) {
 module.exports = function(){
 	if(!Utils.getGlobalConfig("autoUpdate")) return;
 	
-	if(path.extname(__dirname) == '.asar'){ // Are we inside an asar?
-		console.log('You are running a packaged Glasscord installation!'); // Yes.
-		let asarName = path.join(path.dirname(__dirname), path.basename(__dirname, '.asar')); // result is whatever-the-dir/glasscord (without the .asar at the end)
+	if(path.extname(__dirname) == ".asar"){ // Are we inside an asar?
+		console.log("You are running a packaged Glasscord installation!"); // Yes.
+		let asarName = path.join(path.dirname(__dirname), path.basename(__dirname, ".asar")); // result is whatever-the-dir/glasscord (without the .asar at the end)
 		// CALL TO THE GITHUB RELEASES API
-		https.get('https://api.github.com/repos/AryToNeX/Glasscord/releases/latest', {headers: {'user-agent': 'glasscord-updater-' + pak.version}}, result => {
+		https.get("https://api.github.com/repos/AryToNeX/Glasscord/releases/latest", {headers: {"user-agent": "glasscord-updater-" + pak.version}}, result => {
 			// Let's check the error
 			if(result.statusCode != 200){
-				console.log('Error while querying GitHub API (releases/latest): status code is ' + result.statusCode);
+				console.log("Error while querying GitHub API (releases/latest): status code is " + result.statusCode);
 				return;
 			}
 			
 			// Let's now get the data
-			let data = '';
-			result.on('data', chunk => data += chunk);
+			let data = "";
+			result.on("data", chunk => data += chunk);
 			
 			// Now we want to work with the data, right?
-			result.on('end', () => {
+			result.on("end", () => {
 				data = JSON.parse(data);
 				
 				// If there's no new version, return here.
@@ -117,30 +117,30 @@ module.exports = function(){
 				}
 				
 				// Let's download it!
-				httpsGetRecursive(url, {headers: {'user-agent': 'glasscord-updater-' + pak.version}}, result => {
+				httpsGetRecursive(url, {headers: {"user-agent": "glasscord-updater-" + pak.version}}, result => {
 					// Again, let's check for errors
 					if(result.statusCode != 200){
-						console.log('Error while querying GitHub API (releases/download): status code is ' + result.statusCode);
+						console.log("Error while querying GitHub API (releases/download): status code is " + result.statusCode);
 						return;
 					}
 					
 					// We may want to save the data in a file with a .new extension for now.
-					let newName = asarName + '.new';
-					let fd = fs.openSync(newName, 'a');
-					result.on('data', chunk => fs.appendFileSync(fd, chunk));
+					let newName = asarName + ".new";
+					let fd = fs.openSync(newName, "a");
+					result.on("data", chunk => fs.appendFileSync(fd, chunk));
 					
 					// We reached the end, let's close and rename the files.
-					result.on('end', () => {
+					result.on("end", () => {
 						fs.closeSync(fd); // Let's close the file
 						try{
-							fs.renameSync(asarName + '.asar', asarName + '.old'); // Our current .asar becomes .old
-							fs.renameSync(newName, asarName + '.asar'); // The .new file becomes our .asar
+							fs.renameSync(asarName + ".asar", asarName + ".old"); // Our current .asar becomes .old
+							fs.renameSync(newName, asarName + ".asar"); // The .new file becomes our .asar
 						}catch(e){
-							console.log('Glasscord update failed upon file renaming!');
+							console.log("Glasscord update failed upon file renaming!");
 						}
 						
 						// We finished! The next time Discord is opened, it will have the new version up and running, which is enough.
-						console.log('Glasscord update downloaded!');
+						console.log("Glasscord update downloaded!");
 					});
 				});
 			});

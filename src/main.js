@@ -13,13 +13,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-'use strict';
+"use strict";
 
-const electron = require('electron');
-const fs = require('fs');
-const path = require('path');
-const Utils = require('./utils.js');
-const pak = require('../package.json');
+const electron = require("electron");
+const fs = require("fs");
+const path = require("path");
+const Utils = require("./utils.js");
+const pak = require("../package.json");
 
 // Zack's doing
 function isEmpty(obj) {
@@ -33,98 +33,45 @@ function isEmpty(obj) {
 }
 
 module.exports = class Main{
-	
-	modules = {};
-	
-	constructor(win){
-		Object.defineProperty(this, 'win', {get: function() { return win; }});
-		
+	constructor(){
 		// Let's register our event listeners now.
 		this._eventListener();
 		
 		// Let's read our modules now
 		this._loadModules();
+		
+		// This is a Singleton
+		Main.prototype._instance = this;
+	}
+	
+	static getInstance(){
+		if(typeof Main.prototype._instance === "undefined")
+			new Main();
+		return Main.prototype._instance;
 	}
 	
 	getModule(name){
-		return this.modules[name] || null;
+		return this.modules[name] || undefined;
 	}
 	
 	// Methods for private use -- don't call them from outside, please
-	
-	/**
-	 * The hook method
-	 */
-	_hook(){
-		this._watchdog();
-	}
 	
 	/**
 	 * This is the event listener. Every fired event gets listened here.
 	 */
 	_eventListener(){
 		// Expose event listeners for controller plugins
-		electron.ipcMain.on('glasscord_refresh', () => {
-			this._log('IPC requested update', 'log');
-			this._updateVariables();
+		electron.ipcMain.on("glasscord_refresh", (e) => {
+			const win = electron.BrowserWindow.fromWebContents(e.sender);
+			if(typeof win === "undefined" || win === null) return;
+			this.constructor._log(win.webContents, "IPC requested update");
+			this._updateVariables(win);
 		});
 		// Everything else can be controlled via CSS styling
-		
-		// Hook when the window is loaded
-		this.win.webContents.on('dom-ready', () => {
-			this._hook();
-		});
-	}
-	
-	/**
-	 * Method to spawn a watchdog in the Discord window
-	 * This way we can watch for style changes and update everything accordingly
-	 */
-	_watchdog(){
-		this._executeInRenderer(
-			// RENDERER CODE BEGIN
-			function(){
-				const {ipcRenderer} = GlasscordApi.require('electron');
-				ipcRenderer.send('glasscord_refresh');
-				const callback = function(mutationsList, observer){
-					let shouldUpdate = false;
-					for(let mutation of mutationsList){
-						if(mutation.target.nodeName.toLowerCase() == 'style'){ // text in style has changed!
-							shouldUpdate = true;
-							break;
-						}
-
-						if(mutation.addedNodes.length != 0){ // some nodes were added!
-							for(let addedNode of mutation.addedNodes){
-								if(addedNode.nodeName.toLowerCase() == 'style'){
-									shouldUpdate = true;
-									break;
-								}
-							}
-						}
-
-						if(shouldUpdate) break; // don't spend other time iterating
-
-						if(mutation.removedNodes.length != 0){ // some nodes were removed!
-							for(let removedNode of mutation.removedNodes){
-								if(removedNode.nodeName.toLowerCase() == 'style'){
-									shouldUpdate = true;
-									break;
-								}
-							}
-						}
-					}
-
-					if(shouldUpdate) ipcRenderer.send('glasscord_refresh');
-				}
-				const observer = new MutationObserver(callback);
-				observer.observe(document.head, {childList: true, subtree: true});
-			}
-		);
-		// RENDERER CODE END
 	}
 	
 	_loadModules(){
+		this.modules = {};
 		let dirFiles = fs.readdirSync(path.join(__dirname, "modules"));
 		for(let file of dirFiles){
 			if(file.endsWith(".js")){
@@ -132,8 +79,8 @@ module.exports = class Main{
 				if(!isEmpty(module)){
 					if(module.platformExclude.includes(process.platform)) continue;
 					if(!isEmpty(module.platform) && !module.platform.includes(process.platform)) continue;
-					if(module.appExclude.includes(this._defineApp())) continue;
-					if(!isEmpty(module.app) && !module.app.includes(this._defineApp())) continue;
+					if(module.appExclude.includes(electron.app.name)) continue;
+					if(!isEmpty(module.app) && !module.app.includes(electron.app.name)) continue;
 					
 					if(!isEmpty(module.defaultConfig))
 						Utils.initializeModuleConfig(module.prototype.constructor.name, module.defaultConfig, module.isCore);
@@ -141,7 +88,7 @@ module.exports = class Main{
 						Utils.initializeModuleConfig(module.prototype.constructor.name, null, module.isCore);
 					
 					if(!module.isCore && !Utils.isModuleEnabled(module.prototype.constructor.name)) continue;
-					this.modules[module.prototype.constructor.name] = new module(this);
+					this.modules[module.prototype.constructor.name] = new module();
 				}
 			}
 		}
@@ -153,41 +100,60 @@ module.exports = class Main{
 	 * It is DARN IMPORTANT to keep ALL the variables up to date!
 	 * This function is a void that runs async code, so keep that in mind!
 	 */
-	_updateVariables(){
+	_updateVariables(win){
 		let promises = [];
 		
 		for(let moduleName in this.modules){
 			if(this.modules[moduleName].cssProps && this.modules[moduleName].cssProps.length != 0){
 				for(let prop of this.modules[moduleName].cssProps){
-					promises.push(this._getCssProp(prop).then(value => this.modules[moduleName].update(prop, value)));
+					promises.push(this.constructor._getCssProp(win.webContents, prop).then(value => this.modules[moduleName].update(win, prop, value)));
 				}
 			}
 		}
 		
 		Promise.all(promises).then(res => {
-			this._log("Updated!", 'log');
+			this.constructor._log(win.webContents, "Updated!", 'log');
 		});
+	}
+	
+	_emitWindowInit(win){
+		for(let moduleName in this.modules){
+			this.modules[moduleName].windowInit(win);
+		}
 	}
 	
 	/**
 	 * Another handy method to log directly to DevTools
 	 */
-	_log(message, level = 'log'){
-		this._executeInRenderer(
+	static _log(webContents, message, level = "log"){
+		return this._executeInRenderer(webContents,
 			// RENDERER CODE BEGIN
 			function(message, level){
-				console[level]('%c[Glasscord] %c' + message, 'color:#ff00ff;font-weight:bold', 'color:inherit;font-weight:normal;');
+				console[level](...message);
 			}
 			// RENDERER CODE END
-		, message, level);
+		, this._formatLogMessage(message), level);
+	}
+	
+	static _logGlobal(message, level = "log"){
+		console[level](...this._formatLogMessage(message, "cli"));
+		for(let webContents of electron.webContents.getAllWebContents())
+			this._log(webContents, message, level);
+		return true;
+	}
+	
+	static _formatLogMessage(message, type = "devtools"){
+		const ansi_escape_code = "\x1b";
+		if(type === "cli") return [ansi_escape_code + "[95m[Glasscord]" + ansi_escape_code + "[0m " + message];
+		return ["%c[Glasscord] %c" + message, "color:#ff00ff;font-weight:bold", "color:inherit;font-weight:normal;"];
 	}
 	
 	/**
 	 * General method to get CSS properties from themes.
 	 * Hacky but it does the job.
 	 */
-	_getCssProp(propName){
-		return this._executeInRenderer(
+	static _getCssProp(webContents, propName){
+		return this._executeInRenderer(webContents,
 			// RENDERER CODE BEGIN
 			function(propName){
 				let flag = getComputedStyle(document.documentElement).getPropertyValue(propName);
@@ -201,16 +167,11 @@ module.exports = class Main{
 	}
 	
 	// stolen from zack senpai
-	_executeInRenderer(method, ...params) {
+	static _executeInRenderer(webContents, method, ...params) {
 		if(method.name.length !== 0)
 			method = method.toString().replace(method.name, "function").replace("function function", "function");
 		else method = method.toString();
-		return this.win.webContents.executeJavaScript(`(${method})(...${JSON.stringify(params)});`);
-	}
-	
-	_defineApp(){
-		const app = require(path.resolve(electron.app.getAppPath(), "package.json"));
-		return app.name;
+		return webContents.executeJavaScript(`(${method})(...${JSON.stringify(params)});`);
 	}
 	
 }

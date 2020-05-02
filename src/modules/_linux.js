@@ -13,66 +13,22 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-'use strict';
+"use strict";
 
-const Module = require('../module.js');
-const util = require('util');
-const sys = require('sys');
-const exec = util.promisify(require('child_process').exec);
-const execFile = util.promisify(require('child_process').execFile);
+const glasstron = require("../glasstron_wrapper.js");
+const Module = require("../module.js");
 
 module.exports = class Linux extends Module{
 	static isCore = true;
-	static platform = ['linux'];
+	static platform = ["linux"];
 	cssProps = ["--glasscord-linux-blur"];
 	
-	update(cssProp, value){
-		value = (value.toLowerCase() === "true");
-		this._getXWindowManager().then(res => {
-			switch(res){
-				case 'KWin':
-					this._kwin_requestBlur(value);
-					break;
-				default:
-					if(value)
-						this.log("You are not running a supported window manager. Blur won't be available via Glasscord.");
-					break;
-			}
-		});
+	update(win, cssProp, value){
+		value = (typeof value === "string" && value.toLowerCase() === "true");
+		glasstron.update(win, {linux: {requestBlur: value}});
 	}
 	
-	/**
-	 * This method returns us the current X window manager used
-	 */
 	_getXWindowManager(){
-		if(process.env.XDG_SESSION_TYPE == 'x11'){
-			return execFile('which', ['xprop']).then(res => {
-				if(res.error){
-					this.log("Your system is missing the xprop tool (perhaps we're in a Snap/Flatpak container?). Please make it available to Discord!");
-					return null;
-				}
-				this.xprop = res.stdout.trim();
-				
-				const shCommand = `${this.xprop} -id $(${this.xprop} -root -notype | awk '$1=="_NET_SUPPORTING_WM_CHECK:"\{print $5\}') -notype -f _NET_WM_NAME 8t | grep "_NET_WM_NAME = " | cut --delimiter=' ' --fields=3 | cut --delimiter='"' --fields=2`;
-				return execFile('sh', ['-c',shCommand]).then(res => {
-					if(res.error) return null;
-					return res.stdout.trim();
-				});
-			});
-		}
-		this.log("It seems you're not in an X.Org session!");
-		return Promise.resolve(null);
-	}
-	
-	/**
-	 * This method handles blurring on KWin
-	 * Sorry, Wayland users (for now) :C
-	 */
-	_kwin_requestBlur(mode){
-		if(!this.xprop) return;
-		if(process.env.XDG_SESSION_TYPE != 'x11') return;
-		const xid = '0x' + this.main.win.getNativeWindowHandle().readUInt32LE().toString(16);
-		const shCommand = this.xprop + ' -f _KDE_NET_WM_BLUR_BEHIND_REGION 32c ' + (mode ? '-set' : '-remove') + ' _KDE_NET_WM_BLUR_BEHIND_REGION ' + (mode ? '0' : '') + ' -id ' + xid;
-		return exec(shCommand);
+		return glasstron.getPlatform()._getXWindowManager();
 	}
 }

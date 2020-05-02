@@ -13,45 +13,41 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-'use strict';
+"use strict";
 
-const electron = require('electron');
-const path = require('path');
-const Main = require('./main.js');
-const Utils = require('./utils.js');
+const electron = require("electron");
+const path = require("path");
+const Main = require("./main.js");
+const Utils = require("./utils.js");
 
 /*
  * The BrowserWindow override class
  */
 class BrowserWindow extends electron.BrowserWindow {
 	constructor(options) {
-		if(process.platform != 'win32') options.transparent = true;
-		options.backgroundColor = '#00000000';
+		if(process.platform != "win32") options.transparent = true;
+		options.backgroundColor = "#00000000";
 		options.webPreferences.contextIsolation = false; // enforce it
-
 		let _preload = null;
-		if(typeof options.webPreferences.preload !== 'undefined')
+		if(typeof options.webPreferences.preload !== "undefined")
 			_preload = options.webPreferences.preload;
 		options.webPreferences.preload = path.join(__dirname, "preload.js");
 		Object.assign(options, Utils.getWindowProperties());
-		electron.ipcMain.on('_preload', function waitForPreload(e){
-			if(typeof e.sender._preload !== "undefined")
-				e.returnValue = e.sender._preload;
-			else
-				setTimeout(waitForPreload, 50);
-		});
 		super(options);
 		this.webContents._preload = _preload;
-		new Main(this);
-	}
-
-	/**
-	 * Let's stub setBackgroundColor because it's way too buggy. Use the CSS 'body' selector instead.
-	 */
-	setBackgroundColor(backgroundColor){
-		return;
+		Main.getInstance()._emitWindowInit(this);
 	}
 }
+
+/*
+ * Preload querying is handled by this piece of code
+ */
+electron.ipcMain.on("_preload", function waitForPreload(e){
+	if(typeof e.sender._preload !== "undefined")
+		e.returnValue = e.sender._preload;
+	else
+		setTimeout(waitForPreload, 50);
+});
 
 Object.assign(BrowserWindow, electron.BrowserWindow); // Retains the original functions
 

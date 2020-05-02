@@ -150,7 +150,8 @@ Here's a straightforward CSS properties explaination. Let's go through them one 
 ### `--glasscord-win-blur` (Windows)
 #### accepts a value between those ones: `acrylic`, `blurbehind`, `transparent`; defaults to `acrylic`
 Sets the blur type on Windows.
-- `acrylic` refers to the strong blur used in Microsoft's Fluent Design. Note: it can be slow when dragging/resizing on some Windows versions.
+- `acrylic` refers to the strong blur used in Microsoft's Fluent Design. Note: it can be slow when
+dragging/resizing on some Windows versions.
 - `blurbehind` is a weaker blur than the other one, and it kinda resembles the good old Aero Glass effect.
 - `transparent` means no blur at all, so the window is just transparent.
 
@@ -159,7 +160,8 @@ Sets the blur type on Windows.
 If you're using `acrylic` as the blur type used on Windows, setting this property will use the `blurbehind` blur type
 when you're resizing or moving a window.
 
-This is lame, but since some Windows versions are affected by an annoying bug causing a slowdown upon resizing/moving the Discord window,
+This is lame, but since some Windows versions are affected by an annoying bug causing a slowdown upon
+resizing/moving the Discord window,
 there was really no other choice but to implement it.
 
 Let's hope for Microsoft to fix this bug in upcoming Windows releases.

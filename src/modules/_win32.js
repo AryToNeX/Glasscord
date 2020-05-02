@@ -13,95 +13,27 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-'use strict';
+"use strict";
 
-const Module = require('../module.js');
-const SWCA = require("../native/win32_swca/swca.js");
+const glasstron = require("../glasstron_wrapper.js");
+const Module = require("../module.js");
 
 module.exports = class Win32 extends Module{
 	static isCore = true;
-	static platform = ['win32'];
+	static platform = ["win32"];
 	cssProps = ["--glasscord-win-blur", "--glasscord-win-performance-mode"];
 	
-	constructor(main){
-		super(main);
-		this.swca = new SWCA(this.main.win);
-		this._type = 'none';
-		this._performance_mode = true;
-		const lessCostlyBlurWin = Win32.debounce(() => {this._apply('blurbehind')}, 50, true);
-		const moreCostlyBlurWin = Win32.debounce(() => {this._apply('acrylic')}, 50);
-		this.main.win.on('move', () => {
-			if(this._type == 'acrylic' && this._performance_mode){
-				lessCostlyBlurWin();
-				moreCostlyBlurWin();
-			}
-		});
-		this.main.win.on('resize', () => {
-			if(this._type == 'acrylic' && this._performance_mode){
-				lessCostlyBlurWin();
-				moreCostlyBlurWin();
-			}
-		});
-	}
-	
-	update(cssProp, value){
+	update(win, cssProp, value){
 		switch(cssProp){
 			case "--glasscord-win-blur":
-				if(value) this._type = value;
-				else this._type = 'none';
-				this._apply(this._type);
+				if(typeof value === "undefined" || value === null)
+					value = "none";
+				glasstron.update(win, {windows: {blurType: value}});
 				break;
 			case "--glasscord-win-performance-mode":
-				if(value){
-					switch(value){
-						case "true":
-						default:
-							this._performance_mode = true;
-							break;
-						case "false":
-							this._performance_mode = false;
-							break; 
-						}
-					return;
-				}
-				this._performance_mode = true;
+				value = (typeof value === "string" && value.toLowerCase() === "true");
+				glasstron.update(win, {windows: {performanceMode: value}});
 				break;
 		}
-	}
-	
-	_apply(type){
-		switch(type){
-			case 'acrylic':
-				this.swca.setAcrylic(0x00000001);
-				break;
-			case 'blurbehind':
-				this.swca.setBlurBehind(0x00000000);
-				break;
-			case 'transparent':
-				this.swca.setTransparentGradient(0x00000000);
-				break;
-			case 'none':
-			default:
-				this.swca.disable(0xff000000);
-				break;
-		}
-	}
-	
-	/**
-	 * Debounce function
-	 * Might come in handy, given all those bouncy events!
-	 */
-	static debounce(func, wait, immediate){
-		var timeout;
-		return function() {
-			var context = this, args = arguments;
-			var callNow = immediate && !timeout;
-			clearTimeout(timeout);
-			timeout = setTimeout(function() {
-				timeout = null;
-				if (!immediate) func.apply(context, args);
-			}, wait);
-			if (callNow) func.apply(context, args);
-		};
 	}
 }
