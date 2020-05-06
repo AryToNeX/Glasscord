@@ -1,4 +1,4 @@
- /*
+/*
    Copyright 2020 AryToNeX
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,20 +13,20 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-'use strict';
+"use strict";
 
-const electron = require('electron');
-const pak = require('../package.json');
+const electron = require("electron");
+const pak = require("../package.json");
 
 const _GlasscordApi = {
 	require: module.require,
 	version: pak.version
 };
 
-process.once('loaded', () => {
+process.once("loaded", () => {
 	global.GlasscordApi = Object.assign({}, _GlasscordApi);
 });
 
-const _preload = electron.ipcRenderer.sendSync('_preload');
-if(typeof _preload == 'string') // it exists!
+const _preload = electron.ipcRenderer.sendSync("_preload");
+if(typeof _preload == "string") // it exists!
 	_GlasscordApi.require(_preload);

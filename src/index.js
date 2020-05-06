@@ -13,16 +13,16 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-'use strict';
+"use strict";
 
-const electron = require('electron');
-const path = require('path');
-const fs = require('fs');
-const Module = require('module');
-const BrowserWindow = require('./browser_window.js');
+const electron = require("electron");
+const path = require("path");
+const fs = require("fs");
+const Module = require("module");
+const BrowserWindow = require("./browser_window.js");
 
 // Require our version checker
-require('./version_check.js')();
+require("./version_check.js")();
 
 overrideEmit();
 onReady();
@@ -35,8 +35,8 @@ module.exports = {};
 
 function onReady(){
 	// Switches and configs that can be toggled on directly
-	if(!electron.app.commandLine.hasSwitch('enable-transparent-visuals'))
-		electron.app.commandLine.appendSwitch('enable-transparent-visuals'); // ALWAYS enable transparent visuals
+	if(!electron.app.commandLine.hasSwitch("enable-transparent-visuals"))
+		electron.app.commandLine.appendSwitch("enable-transparent-visuals"); // ALWAYS enable transparent visuals
 
 	// Replacing of BrowserWindow with ours
 	Object.assign(BrowserWindow, electron.BrowserWindow); // Assign the new chrome-specific functions
@@ -48,7 +48,7 @@ function onReady(){
 
 	if(require.cache[electronPath].exports !== newElectron)
 		console.log("Something's wrong! Glasscord can't be injected properly!");
-};
+}
 
 function overrideEmit(){ // from Zack, blame Electron
 	const originalEmit = electron.app.emit;

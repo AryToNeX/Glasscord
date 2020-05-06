@@ -14,19 +14,19 @@
    limitations under the License.
 */
 
-const os = require('os');
-const path = require('path');
-const execFile = require('util').promisify(require('child_process').execFile);
-const Utils = require('../../utils.js');
+const os = require("os");
+const path = require("path");
+const execFile = require("util").promisify(require("child_process").execFile);
+const Utils = require("../../utils.js");
 
 module.exports = class SWCA{
 
 	constructor(win){
 		this.hwnd = win.getNativeWindowHandle()["readInt32" + os.endianness]();
-		if(!Utils.isInPath('glasscord_swca.exe'))
-			Utils.copyToPath(path.join(__dirname, 'swca.exe'), 'glasscord_swca.exe');
+		if(!Utils.isInPath("glasscord_swca.exe"))
+			Utils.copyToPath(path.join(__dirname, "swca.exe"), "glasscord_swca.exe");
 		
-		this.swca = Utils.getSavedPath('glasscord_swca.exe');
+		this.swca = Utils.getSavedPath("glasscord_swca.exe");
 	}
 	
 	setWindowCompositionAttribute(mode, tint){
@@ -53,4 +53,4 @@ module.exports = class SWCA{
 		return this.setWindowCompositionAttribute(4, tint);
 	}
 
-}
+};

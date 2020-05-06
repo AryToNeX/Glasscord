@@ -13,15 +13,15 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-'use strict';
+"use strict";
 
-const path = require('path');
-const fs = require('fs');
-const electron = require('electron');
+const path = require("path");
+const fs = require("fs");
+const electron = require("electron");
 
-const savepath = path.join(electron.app.getPath('appData'), 'glasscord');
-const globalconfigpath = path.join(savepath, 'GlobalConfiguration.json');
-const configpath = path.join(savepath, 'config_' + electron.app.name + '.json');
+const savepath = path.join(electron.app.getPath("appData"), "glasscord");
+const globalconfigpath = path.join(savepath, "GlobalConfiguration.json");
+const configpath = path.join(savepath, "config_" + electron.app.name + ".json");
 const defaultGlobalConfig = {
 	autoUpdate: true
 };

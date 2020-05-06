@@ -21,22 +21,22 @@ module.exports = class Module{
 	static isCore = false;
 	static platform = [];
 	static platformExclude = [];
-	
+
 	static app = [];
 	static appExclude = [];
-	
+
 	static defaultConfig = {};
-	
+
 	cssProps = [];
-	
+
 	constructor(main){
 		this.main = main;
 		this.config = Utils.getConfigForModule(this.constructor.name);
 		this.log("Module loaded!");
 	}
-	
+
 	update(cssProp, value){}
-	
+
 	saveConfig(){
 		Utils.setConfigForModule(this.constructor.name, this.config);
 		Utils.saveConfig();
