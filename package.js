@@ -19,6 +19,15 @@ const asar = require('asar');
 const glob = require('glob');
 const dest = 'glasscord.asar';
 const src = '.';
-const filenames = ['package.json', 'LICENSE', ...glob.sync('src/**'), 'node_modules', ...glob.sync('node_modules/glasstron/**')];
+const filenames = [
+	'package.json',
+	'LICENSE',
+	...glob.sync('src/**'),
+
+	'node_modules',
+	...glob.sync('node_modules/glasstron/**'),
+	...glob.sync('node_modules/x11/**'),
+	...glob.sync('node_modules/os-homedir/**')
+];
 
 asar.createPackageFromFiles(src, dest, filenames).then(() => console.log('done')).catch(e => console.log("Something went wrong: " + e));
