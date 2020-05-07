@@ -13,21 +13,48 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-'use strict';
+"use strict";
 
-const asar = require('asar');
-const glob = require('glob');
-const dest = 'glasscord.asar';
-const src = '.';
-const filenames = [
-	'package.json',
-	'LICENSE',
-	...glob.sync('src/**'),
+const asar = require("asar");
+const glob = require("glob");
+const path = require("path");
+const src = ".";
 
-	'node_modules',
-	...glob.sync('node_modules/glasstron/**'),
-	...glob.sync('node_modules/x11/**'),
-	...glob.sync('node_modules/os-homedir/**')
+let filenames = [
+	path.resolve("package.json"),
+	path.resolve("LICENSE"),
+	...glob.sync(path.join(path.resolve("src"), "**")),
+	path.resolve("node_modules")
 ];
 
-asar.createPackageFromFiles(src, dest, filenames).then(() => console.log('done')).catch(e => console.log("Something went wrong: " + e));
+// Optimize package size by removing unneeded garbage from the node modules folder
+const blacklistFilenames = [
+	path.resolve("node_modules", "x11", "test-runner.js"),
+	...glob.sync(path.join(path.resolve("node_modules", "x11", "test"), "**")),
+	...glob.sync(path.join(path.resolve("node_modules", "x11", "examples"), "**")),
+	...glob.sync(path.join(path.resolve("node_modules", "x11", "autogen"), "**"))
+];
+
+traverseDeps(src, undefined, filenames);
+
+asar.createPackageFromFiles(src, "glasscord.asar", filenames.filter(x => !blacklistFilenames.includes(x)))
+	.then(() => console.log("Packaging done"))
+	.catch(e => console.log("Something went wrong: " + e));
+
+// Functions
+
+function traverseDeps(startPath, dependency = undefined, filenames = []){
+	let pak, pathToBackup;
+	if(typeof dependency !== "undefined"){
+		pak = require(path.resolve(startPath, "node_modules", dependency, "package.json"));
+		pathToBackup = path.resolve(startPath, "node_modules", dependency, "**")
+	}else
+		pak = require(path.resolve(startPath, "package.json"));
+	
+	if(typeof pathToBackup !== "undefined") filenames.push(...glob.sync(pathToBackup));
+	
+	for(let dependency in pak.dependencies){
+		console.log("Including dependency: " + dependency);
+		traverseDeps(startPath, dependency, filenames);
+	}
+}
