@@ -51,5 +51,4 @@ electron.ipcMain.on("_preload", function waitForPreload(e){
 		setTimeout(waitForPreload, 50);
 });
 
-Object.assign(BrowserWindow, electron.BrowserWindow); // Retains the original functions
 module.exports = BrowserWindow;

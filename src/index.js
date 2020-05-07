@@ -37,8 +37,7 @@ module.exports = {};
 // ------------------------------------------------------------- FUNCTIONS
 
 function injectGlasscordClass(){
-	// Replacing of BrowserWindow with ours
-	Object.assign(BrowserWindow, electron.BrowserWindow); // Assign the new chrome-specific functions
+	// Replacing BrowserWindow with our wrapper class
 	const electronPath = require.resolve("electron");
 	const newElectron = Object.assign({}, electron, {BrowserWindow}); // Create new electron object
 
