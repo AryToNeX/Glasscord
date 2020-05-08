@@ -18,10 +18,11 @@
 const path = require("path");
 const fs = require("fs");
 const Utils = require("./utils.js");
+const pak = require("../package.json");
 const options = {headers: {"user-agent": "glasscord"}};
 
 module.exports = function(){
-	if(!Utils.getGlobalConfig("autoUpdate")) return console.log("Glasscord autoupdate is disabled!");
+	if(!Utils.globalConfig.autoUpdate) return console.log("Glasscord autoupdate is disabled!");
 	
 	if(path.extname(path.join(__dirname, "..")) == ".asar"){ // Are we inside an asar?
 		console.log("You are running a packaged Glasscord installation!"); // Yes.
@@ -34,7 +35,7 @@ module.exports = function(){
 				return;
 			}
 
-			data = JSON.parse(result.data);
+			let data = JSON.parse(result.data);
 
 			// If there's no new version, return here.
 			if(Utils.versionCompare(pak.version, data.tag_name.substring(1), {zeroExtend: true}) >= 0) return;

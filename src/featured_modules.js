@@ -33,6 +33,11 @@ module.exports = function(){
 	console.log("Fetching featured Glasscord modules for application: " + appName);
 	Utils.httpsGet(URL + "master", options, result => {
 
+		if(result.statusCode != 200){
+			console.log("[Glasscord Featured Modules] Error while querying GitHub API: status code is " + result.statusCode);
+			return;
+		}
+
 		let data = JSON.parse(result.data);
 
 		masterSha = data.sha;
@@ -46,6 +51,11 @@ module.exports = function(){
 		}
 
 		return Utils.httpsGet(URL + sha, options, result => {
+
+			if(result.statusCode != 200){
+				console.log("[Glasscord Featured Modules] Error while querying GitHub API: status code is " + result.statusCode);
+				return;
+			}
 
 			let data = JSON.parse(result.data);
 
@@ -61,6 +71,12 @@ module.exports = function(){
 				return console.log("[Glasscord Featured Modules] No featured modules available for this app.");
 
 			return Utils.httpsGet(URL + sha, options, result => {
+
+				if(result.statusCode != 200){
+					console.log("[Glasscord Featured Modules] Error while querying GitHub API: status code is " + result.statusCode);
+					return;
+				}
+
 				let data = JSON.parse(result.data);
 
 				let blobs = [];
@@ -72,6 +88,11 @@ module.exports = function(){
 				for(let blob of blobs){
 					console.log("[Glasscord Featured Modules] Downloading " + blob + "...");
 					Utils.httpsGet(FilePattern.replace("{SHA}", masterSha).replace("{PATH}", blob), options, result => {
+						if(result.statusCode != 200){
+							console.log("[Glasscord Featured Modules] Error while downloading " + blob + ": status code is " + result.statusCode);
+							return;
+						}
+
 						blob = path.basename(blob);
 						if(
 							fs.existsSync(path.join(modulePath, blob)) &&

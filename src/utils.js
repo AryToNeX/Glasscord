@@ -95,19 +95,6 @@ class Utils{
 		fs.writeFileSync(globalconfigpath, JSON.stringify(this.globalConfig, undefined, 2));
 	}
 
-	static getGlobalConfig(name){
-		try{
-			return this.globalConfig["name"];
-		}catch(e){
-			return null;
-		}
-	}
-
-	static setGlobalConfig(name, value){
-		if(!this.globalConfig) Utils.loadGlobalConfig();
-		this.globalConfig[name] = value;
-	}
-
 	static getConfigForModule(name, _defaultConfig = {}){
 		try{
 			if(this.config.modules[name] && !this.config.modules[name].config)
