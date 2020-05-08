@@ -17,7 +17,6 @@
 
 const Utils = require("./utils.js");
 const Main = require("./main.js");
-const WebContents = require("electron").WebContents;
 
 module.exports = class Module{
 	static isCore = false;
@@ -54,4 +53,16 @@ module.exports = class Module{
 		message = `[${this.constructor.name}] ${message}`;
 		return Main._logGlobal(message, level);
 	}
+
+	static isApplicable(){
+		if(
+			this.platformExclude.includes(process.platform) ||
+			(!Utils.isEmpty(this.platform) && !this.platform.includes(process.platform)) ||
+			this.appExclude.includes(Utils.getRootAppName()) ||
+			(!Utils.isEmpty(this.app) && !this.app.includes(Utils.getRootAppName()))
+		) return false;
+		return true;
+	}
+
+
 }

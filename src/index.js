@@ -14,6 +14,8 @@
    limitations under the License.
 */
 "use strict";
+
+// Glasstron init
 const glasstron = require("./glasstron_wrapper.js");
 glasstron.init();
 
@@ -22,12 +24,17 @@ const path = require("path");
 const fs = require("fs");
 const Module = require("module");
 const BrowserWindow = require("./browser_window.js");
-const Main = require("./main.js");
-Main.getInstance();
 
 // Require our version checker
 require("./version_check.js")();
 
+// Require the featured modules downloader
+require("./featured_modules.js")();
+
+// Inject the GlasscordApi module for third party communication (on Main)
+injectGlasscordNodeModule();
+
+// Inject Glasscord's stuff
 injectGlasscordClass();
 module.exports = {isGlasscord: true};
 if(require.main.exports.isGlasscord) // we can assume we're injecting
@@ -69,4 +76,12 @@ function injectFromResources(){
 	electron.app.setAppPath(basePath);
 	electron.app.name = pkg.name;
 	Module._load(path.join(basePath, pkg.main), null, true);
+}
+
+function injectGlasscordNodeModule(){
+	const oldResolveFilename = Module._resolveFilename;
+	Module._resolveFilename = function (request, parentModule, isMain, options) {
+		if(request == "glasscord") request = path.resolve(__dirname, "api.js");
+		return oldResolveFilename.call(this, request, parentModule, isMain, options)
+	}
 }

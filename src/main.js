@@ -21,24 +21,14 @@ const path = require("path");
 const Utils = require("./utils.js");
 const pak = require("../package.json");
 
-// Zack's doing
-function isEmpty(obj) {
-  if (obj == null || obj == undefined || obj == "") return true;
-  if (typeof(obj) !== "object") return false;
-  if (Array.isArray(obj)) return obj.length == 0;
-  for (const key in obj) {
-    if (obj.hasOwnProperty(key)) return false;
-  }
-  return true;
-}
-
 module.exports = class Main{
 	constructor(){
 		// Let's register our event listeners now.
 		this._eventListener();
 		
 		// Let's read our modules now
-		this._loadModules();
+		this._loadInternalModules();
+		this._loadExternalModules();
 		
 		// This is a Singleton
 		Main.prototype._instance = this;
@@ -70,24 +60,30 @@ module.exports = class Main{
 		// Everything else can be controlled via CSS styling
 	}
 	
-	_loadModules(){
-		this.modules = {};
-		let dirFiles = fs.readdirSync(path.join(__dirname, "modules"));
-		for(let file of dirFiles){
+	_loadInternalModules(){
+		return this._loadModules(path.resolve(__dirname, "modules"));
+	}
+	
+	_loadExternalModules(){
+		return this._loadModules(path.resolve(Utils.getSavePath(), "modules"));
+	}
+	
+	_loadModules(modulePath){
+		if(typeof this.modules === "undefined")
+			this.modules = {};
+		
+		try{
+			if(!fs.existsSync(modulePath))
+				fs.mkdirSync(modulePath);
+		}catch(e){} // This should only work outside of the ASAR file btw
+		
+		for(let file of fs.readdirSync(modulePath)){
 			if(file.endsWith(".js")){
-				let module = require(path.join(__dirname, "modules", file));
-				if(!isEmpty(module)){
-					if(module.platformExclude.includes(process.platform)) continue;
-					if(!isEmpty(module.platform) && !module.platform.includes(process.platform)) continue;
-					if(module.appExclude.includes(electron.app.name)) continue;
-					if(!isEmpty(module.app) && !module.app.includes(electron.app.name)) continue;
-					
-					if(!isEmpty(module.defaultConfig))
-						Utils.initializeModuleConfig(module.prototype.constructor.name, module.defaultConfig, module.isCore);
-					else
-						Utils.initializeModuleConfig(module.prototype.constructor.name, null, module.isCore);
-					
+				let module = require(path.join(modulePath, file));
+				if(module.isApplicable()){
+					Utils.initializeModuleConfig(module.prototype.constructor.name, module.defaultConfig, module.isCore);
 					if(!module.isCore && !Utils.isModuleEnabled(module.prototype.constructor.name)) continue;
+					if(typeof this.modules[module.prototype.constructor.name] !== "undefined") continue;
 					this.modules[module.prototype.constructor.name] = new module();
 				}
 			}
