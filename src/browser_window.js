@@ -48,7 +48,7 @@ electron.ipcMain.on("_preload", function waitForPreload(e){
 	if(typeof e.sender._preload !== "undefined")
 		e.returnValue = e.sender._preload;
 	else
-		setTimeout(waitForPreload, 50);
+		setTimeout(waitForPreload, 50, e);
 });
 
 module.exports = BrowserWindow;
