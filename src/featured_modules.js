@@ -79,27 +79,30 @@ module.exports = function(){
 
 				let data = JSON.parse(result.data);
 
-				let blobs = [];
+				let blobs = {};
 				for(let blob of data.tree){
 					if(blob.type === "blob" && path.extname(blob.path) === ".js")
-						blobs.push("featured/" + appName + "/" + blob.path);
+						blobs["featured/" + appName + "/" + blob.path] = blob.sha;
 				}
 
-				for(let blob of blobs){
-					console.log("[Glasscord Featured Modules] Downloading " + blob + "...");
+				for(let blob in blobs){ // blobs[blob] is the blob sha
+					const blobBaseName = path.basename(blob);
+					if(fs.existsSync(path.join(modulePath, blobBaseName))){
+						const file = fs.readFileSync(path.join(modulePath, blobBaseName));
+						const fileHash = Utils.hash("sha1", "blob " + file.length + "\0" + file); // Search: how Git calculates SHA-1 checksums of blobs
+
+						if(blobs[blob] === fileHash)
+							return console.log("[Glasscord Featured Modules] Matching files for " + blob + ".");
+					}
+
+					console.log("[Glasscord Featured Modules] Downloading " + blobBaseName + "...");
 					Utils.httpsGet(FilePattern.replace("{SHA}", masterSha).replace("{PATH}", blob), options, result => {
 						if(result.statusCode != 200){
-							console.log("[Glasscord Featured Modules] Error while downloading " + blob + ": status code is " + result.statusCode);
+							console.log("[Glasscord Featured Modules] Error while downloading " + blobBaseName + ": status code is " + result.statusCode);
 							return;
 						}
-
-						blob = path.basename(blob);
-						if(
-							fs.existsSync(path.join(modulePath, blob)) &&
-							Utils.hash("sha256", result.data) === Utils.hash("sha256", fs.readFileSync(path.join(modulePath, blob)))
-						) return console.log("[Glasscord Featured Modules] Matching files for " + blob + ".");
-						fs.writeFileSync(path.join(modulePath, blob), result.data);
-						console.log("[Glasscord Featured Modules] Downloaded " + blob + ".");
+						fs.writeFileSync(path.join(modulePath, blobBaseName), result.data);
+						console.log("[Glasscord Featured Modules] Downloaded " + blobBaseName + ".");
 					});
 				}
 			});

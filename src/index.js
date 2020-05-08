@@ -82,6 +82,6 @@ function injectGlasscordNodeModule(){
 	const oldResolveFilename = Module._resolveFilename;
 	Module._resolveFilename = function (request, parentModule, isMain, options) {
 		if(request == "glasscord") request = path.resolve(__dirname, "api.js");
-		return oldResolveFilename.call(this, request, parentModule, isMain, options)
+		return oldResolveFilename.call(this, request, parentModule, isMain, options);
 	}
 }
