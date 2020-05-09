@@ -22,7 +22,6 @@ const https = require("https");
 const crypto = require("crypto");
 const rootApps = require("./root_applications.json");
 
-
 const savepath = path.join(electron.app.getPath("appData"), "glasscord");
 const sysconfigpath = path.join("/etc/", "glasscord");
 const globalconfigpath = path.join(savepath, "GlobalConfiguration.json");
