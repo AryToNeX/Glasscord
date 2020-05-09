@@ -23,12 +23,12 @@ const crypto = require("crypto");
 const rootApps = require("./root_applications.json");
 
 
-const savepath = path.join(electron.app.getPath('appData'), 'glasscord');
-const sysconfigpath = path.join('/etc/', 'glasscord');
-const globalconfigpath = path.join(savepath, 'GlobalConfiguration.json');
-const globalconfigsyspath = path.join(sysconfigpath, 'GlobalConfiguration.json');
-const configpath = path.join(savepath, 'config_' + electron.app.name + '.json');
-const configsyspath = path.join(sysconfigpath, 'config_' + electron.app.name + '.json');
+const savepath = path.join(electron.app.getPath("appData"), "glasscord");
+const sysconfigpath = path.join("/etc/", "glasscord");
+const globalconfigpath = path.join(savepath, "GlobalConfiguration.json");
+const globalconfigsyspath = path.join(sysconfigpath, "GlobalConfiguration.json");
+const configpath = path.join(savepath, "config_" + electron.app.name + ".json");
+const configsyspath = path.join(sysconfigpath, "config_" + electron.app.name + ".json");
 
 const defaultGlobalConfig = {
 	autoUpdate: true
