@@ -22,18 +22,14 @@ const https = require("https");
 const crypto = require("crypto");
 const rootApps = require("./root_applications.json");
 
-<<<<<<< HEAD
+
 const savepath = path.join(electron.app.getPath('appData'), 'glasscord');
 const sysconfigpath = path.join('/etc/', 'glasscord');
 const globalconfigpath = path.join(savepath, 'GlobalConfiguration.json');
 const globalconfigsyspath = path.join(sysconfigpath, 'GlobalConfiguration.json');
 const configpath = path.join(savepath, 'config_' + electron.app.name + '.json');
 const configsyspath = path.join(sysconfigpath, 'config_' + electron.app.name + '.json');
-=======
-const savepath = path.join(electron.app.getPath("appData"), "glasscord");
-const globalconfigpath = path.join(savepath, "GlobalConfiguration.json");
-const configpath = path.join(savepath, "config_" + electron.app.name + ".json");
->>>>>>> c3688cf... 0.2.0: Glasstron-centric changes; read description
+
 const defaultGlobalConfig = {
 	autoUpdate: true
 };
