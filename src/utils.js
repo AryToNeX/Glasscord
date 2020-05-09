@@ -20,8 +20,11 @@ const fs = require('fs');
 const electron = require('electron');
 
 const savepath = path.join(electron.app.getPath('appData'), 'glasscord');
+const syspath = path.join('/etc/', 'glasscord');
 const globalconfigpath = path.join(savepath, 'GlobalConfiguration.json');
+const globalconfigsyspath = path.join(syspath, 'GlobalConfiguration.json');
 const configpath = path.join(savepath, 'config_' + electron.app.name + '.json');
+const configsyspath = path.join(syspath, 'config_' + electron.app.name + '.json');
 const defaultGlobalConfig = {
 	autoUpdate: true
 };
@@ -37,7 +40,12 @@ class Utils{
 			try{
 				this.config = require(configpath);
 			}catch(e){
-				Utils.saveConfig();
+				try {
+					this.config = require(configsyspath);
+				}
+				catch(e){
+					Utils.saveConfig();
+				}
 			}
 		}
 	}
@@ -47,7 +55,12 @@ class Utils{
 			try{
 				this.globalConfig = require(globalconfigpath);
 			}catch(e){
-				Utils.saveGlobalConfig();
+				try{
+					this.globalConfig = require(globalconfigsyspath);
+				}
+				catch(e){
+					Utils.saveGlobalConfig();
+				}
 			}
 		}
 	}
