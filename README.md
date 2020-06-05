@@ -55,6 +55,8 @@ Well, glad you asked!
 #### Case 2: you already have an `app` folder
 - Make a duplicate copy of the `package.json` file and name it `package.original.json`.
 
+*You need to name it exactly like this. Glasscord will search for that specific filename in order to make your application start*.
+
 #### Finishing up
 - Place your `glasscord.asar` file inside the `app` folder.
 - Now, your target `package.json` should be extracted. Modify it so that its `main` property points to `./glasscord.asar`.
