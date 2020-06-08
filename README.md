@@ -75,7 +75,7 @@ You can use a third party CSS loader to load Discord themes.
 If that's the case, please install it FIRST, then install Glasscord AFTER you completed the other installation.
 This MAY BREAK the ability of the third party CSS loader to auto-update itself, so be warned!
 
-## How do I USE it?
+## How do I use it?
 Assuming you already installed everything correctly, you will need to load a custom CSS theme which supports Glasscord.
 
 If you want to just try Glasscord on Discord, you can load the `discord_example.theme.css` (which is in
