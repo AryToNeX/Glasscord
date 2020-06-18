@@ -35,7 +35,21 @@ _TL;DR: Help me I have no purpose in this life anymore_
 ## How do I install it?
 Well, glad you asked!
 
-- Look in the Releases section for the latest released version of Glasscord. Download the `glasscord.asar` file from there.
+### Getting Glasscord
+Clone the repository and package it with asar. That way you have the latest version of the code with most recent fixes.
+To package glasscord you need to have git and node.js installed. Also you'll need [asar](https://github.com/electron/asar). To install
+asar: `sudo npm install -g --engine-strict asar`
+```
+$ git clone https://github.com/AryToNeX/Glasscord.git
+$ cd Glasscord
+$ npm install
+$ asar pack . ../glasscord.asar
+```
+
+Alternatively, look in the Releases section for the latest released version of Glasscord. Download the `glasscord.asar` file from there. If
+something doesn't work, you need to clone the repo and package it yourself.
+
+Next:
 - Locate your Electron app installation folder. We will assume it being the root directory from now on.
 - Locate the `resources` folder. Inside it you'll likely have an `app.asar` file OR an `app` folder.
 
@@ -87,6 +101,12 @@ If you're using Glasscord's own CSS loader, you can configure it easily by editi
 - Windows: `%appdata%/glasscord`;
 - Linux: `~/.config/glasscord`; this may vary if you installed Glasscord on a Snap/Flatpak package.
 - macOS: `~/Library/Application Support/glasscord`.
+
+### Using Glasscord's own CSS loader
+To use Glasscord's own CSS loader, the internal module [`CSSLoader`](src/modules/css_loader.js) has to be enabled.
+Assuming `$CONFIG` is path to your config, the config of `CSSLoader` should be located in `$CONFIG/app/CSSLoader/config.json5` where
+`app` is the application you run. If such file doesn't exist when you run the application after properly injecting `glasscord.asar`,
+then `CSSLoader` module is disabled.
 
 ## Is it compatible with _[name of random Electron app here]_?
 Try it for yourself and let us know!
