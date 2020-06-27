@@ -87,7 +87,7 @@ The default glasscord theme are adapted for [Powercord](https://github.com/power
 
 The root Discord electron installation folder is habitually situated in :
 
-        - Windows: `%appdata%/discord/app-*`; take the latest app version number if you have multiple ones.;
+        - Windows: `%appdata%/discord/app-*`; take the latest app version number if you have multiple ones.
         - Linux: `/opt/discord/`; this may vary depending of your distribution as it may also be situated in `/usr/share/discord`. It may vary if you´ve installed Glasscord on a Snap/Flatpak package.
         - macOS: `~/Library/Application Support/discord`.
 
