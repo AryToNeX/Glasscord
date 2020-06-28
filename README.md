@@ -39,7 +39,7 @@ Well, glad you asked!
 - Locate your Electron app installation folder. We will assume it being the root directory from now on.
 - Locate the `resources` folder. Inside it you'll likely have an `app.asar` file **OR** an `app` folder.
 
-# THIS PART OF THE INSTALLATION DEPEND ON YOUR INSTALLED DISCORD APPLICATION, DON'T FOLLOW BOTH CASE STEPS
+# THIS PART OF THE INSTALLATION DEPENDS ON YOUR INSTALLED DISCORD APPLICATION, DON'T FOLLOW BOTH CASE STEPS
 
 #### Case 1: you have an `app.asar` file
 - Create an `app` folder.
@@ -48,7 +48,7 @@ Well, glad you asked!
   
   If you don't have it, install it via `npm install -g --engine-strict asar`. *This may require administrative rights*.
   
-  *You will have to install [node.js](https://nodejs.org) on your system to use npm commands*.
+  *You will have to install [Node.js](https://nodejs.org) on your system to use npm commands*.
   
   Run this script where the `app.asar` file is:
   ```
@@ -72,24 +72,6 @@ Well, glad you asked!
   }
   ```
 - If everything was done correctly, the Electron app should start and Glasscord should be injected.
-
-#### Notes for Discord
-
-The Glasscord own CSS Loader is currently depreceated in the current state for Discord usage.
-
-So you will have to use a third party CSS loader to load Discord themes.
-
-If you don't have one installed, please install it FIRST, then install Glasscord AFTER you completed the other installation.
-
-Doing otherwise MAY BREAK the ability of the third party CSS loader to auto-update itself, so be warned!
-
-The default glasscord theme are adapted for [Powercord](https://github.com/powercord-org/powercord) usage, but [BeautifulDiscord](https://github.com/leovoel/BeautifulDiscord), [EnhancedDiscord](https://github.com/joe27g/EnhancedDiscord) and [BandagedBetterDiscord](https://github.com/rauenzi/BetterDiscordApp) work as well.
-
-The root Discord electron installation folder is habitually situated in :
-
-        - Windows: `%appdata%/discord/app-*`; take the latest app version number if you have multiple ones.
-        - Linux: `/opt/discord/`; this may vary depending of your distribution as it may also be situated in `/usr/share/discord`. It may vary if you´ve installed Glasscord on a Snap/Flatpak package.
-        - macOS: `~/Library/Application Support/discord`.
 
 ## How do I USE it?
 Assuming you already installed everything correctly, you will need to load a custom CSS theme which supports Glasscord.
@@ -117,7 +99,7 @@ Here's a straightforward CSS properties explaination. Let's go through them one 
 #### accepts a value between those ones: `acrylic`, `blurbehind`, `transparent`; defaults to `acrylic`
 Sets the blur type on Windows.
 - `acrylic` refers to the strong blur used in Microsoft's Fluent Design. Note: it can be slow when
-dragging/resizing on some Windows versions, this is a Windows compositor own problem, not a Glasscord one.
+dragging/resizing on some Windows versions. This is a bug on Windows' side, so please don't report it on the issue tracker.
 - `blurbehind` is a weaker blur than the other one, and it kinda resembles the good old Aero Glass effect.
 - `transparent` means no blur at all, so the window is just transparent..
 
@@ -144,9 +126,6 @@ If set to `none`, the vibrancy effect will not be applied but the window will be
 Tells the window compositor whether to blur behind windows or not.
 
 **Note:** Check the Glasstron project to see which window servers/managers are compatible
-
-## How do i compile it ?
-It is as simple as doing `npm -i` from the Glasscord folder.
 
 ## I want to contribute to this madness!
 Did you find a bug? File it in the issues section!
