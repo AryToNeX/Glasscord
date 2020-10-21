@@ -75,13 +75,22 @@ Well, glad you asked!
 
 #### Finishing up
 - Place your `glasscord.asar` file inside the `app` folder.
-- Now, your target `package.json` should be extracted. Modify it so that its `main` property points to `./glasscord.asar`.
+- **If you don't use Powercord:** Now, your target `package.json` should be extracted. Modify it so that its `main` property points to `./glasscord.asar`.
   ```json
   {
     [...]
       "main": "./glasscord.asar",
     [...]
   }
+  ```
+- **If you use Powercord:** Open `index.js` in your favourite text editor and add this line of code on the first line:
+  ```js
+  require("./glasscord.asar");
+  ```
+  It should be like this:
+  ```js
+  require(`./glasscord.asar`);
+  require(`C:/Users/username/Documents/powercord/injectors/../src/patcher.js`) //Powercord injector. Leave as is in your computer
   ```
 - If everything was done correctly, the Electron app should start and Glasscord should be injected.
 
