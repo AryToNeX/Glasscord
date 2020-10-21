@@ -75,7 +75,7 @@ Well, glad you asked!
 
 #### Finishing up
 - Place your `glasscord.asar` file inside the `app` folder.
-- **If you don't use Powercord:** Now, your target `package.json` should be extracted. Modify it so that its `main` property points to `./glasscord.asar`.
+- **For non-Powercord users:** Now, your target `package.json` should be extracted. Modify it so that its `main` property points to `./glasscord.asar`.
   ```json
   {
     [...]
@@ -83,7 +83,7 @@ Well, glad you asked!
     [...]
   }
   ```
-- **If you use Powercord:** Open `index.js` in your favourite text editor and add this line of code on the first line:
+- **For Powercord users:** Open `index.js` in your favourite text editor and add this line of code on the first line:
   ```js
   require("./glasscord.asar");
   ```
