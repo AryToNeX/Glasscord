@@ -75,22 +75,13 @@ Well, glad you asked!
 
 #### Finishing up
 - Place your `glasscord.asar` file inside the `app` folder.
-- **For non-Powercord users:** Now, your target `package.json` should be extracted. Modify it so that its `main` property points to `./glasscord.asar`.
+- Now, your target `package.json` should be extracted. Modify it so that its `main` property points to `./glasscord.asar`.
   ```json
   {
     [...]
       "main": "./glasscord.asar",
     [...]
   }
-  ```
-- **For Powercord users:** Open `index.js` in your favourite text editor and add this line of code on the first line:
-  ```js
-  require("./glasscord.asar");
-  ```
-  It should be like this:
-  ```js
-  require(`./glasscord.asar`);
-  require(`C:/Users/username/Documents/powercord/injectors/../src/patcher.js`) //Powercord injector. Leave as is in your computer
   ```
 - If everything was done correctly, the Electron app should start and Glasscord should be injected.
 
@@ -99,6 +90,21 @@ Well, glad you asked!
 You can use a third party CSS loader to load Discord themes.
 If that's the case, please install it FIRST, then install Glasscord AFTER you completed the other installation.
 This MAY BREAK the ability of the third party CSS loader to auto-update itself, so be warned!
+
+#### Notes for Powercord
+[Powercord](https://powercord.org/) is a mod client for Discord and there is a specific way to inject glasscord with this mod client.
+
+- First, undo what you made in [Finishing up](https://github.com/AryToNeX/Glasscord#finishing-up)
+- Second, open `index.js` in your favourite text editor and add this in the first line:
+  ```js
+  require("./glasscord.asar");
+  ```
+  It should be like this:
+  ```js
+  require(`./glasscord.asar`);
+  require(`/path/to/powercord/injector`) //Powercord injector. DON'T ADD THIS LINE, THIS IS JUST AN EXAMPLE
+  ```
+- If everything was done correctly, Discord should start and both Glasscord and Powercord should be injected.
 
 ## How do I USE it?
 Assuming you already installed everything correctly, you will need to load a custom CSS theme which supports Glasscord.
