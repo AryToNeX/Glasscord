@@ -1673,10 +1673,10 @@ get-value@^2.0.3, get-value@^2.0.6:
   resolved "https://registry.yarnpkg.com/get-value/-/get-value-2.0.6.tgz#dc15ca1c672387ca76bd37ac0a395ba2042a2c28"
   integrity sha1-3BXKHGcjh8p2vTesCjlbogQqLCg=
 
-glasstron@0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/glasstron/-/glasstron-0.0.5.tgz#41ed8109d1d9980a7112ccc3bd195b1aa17088bd"
-  integrity sha512-1eX2wcW6AxO//gE2eE55M2JkwreHLZgYSmDb0zh//Iw8OgZbf+DTAPfGVUmMQQvGqVjNdao+epu9NISTZAa23A==
+glasstron@0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/glasstron/-/glasstron-0.0.6.tgz#1438899cd49a1cda1999290be2165310b759fd62"
+  integrity sha512-WBE1zH3ZcYhLlfKATfKzuN05Anno2WYlVfImWteU5RM+gqdFLHGIxxM3VR16JvFF5oIYah01MBGQ2+3xTq44iQ==
   dependencies:
     node-addon-api "^3.0.0"
     x11 "^2.3.0"
