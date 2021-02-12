@@ -36,7 +36,7 @@
     "json5": "^2.2.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.12.10",
+    "@babel/cli": "^7.12.16",
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.1",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
