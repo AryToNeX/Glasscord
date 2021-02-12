@@ -40,7 +40,7 @@
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.1",
     "@babel/plugin-proposal-class-properties": "^7.12.13",
-    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-env": "^7.12.16",
     "asar": "^3.0.3",
     "glob": "^7.1.6",
     "eslint": "^7.19.0"
